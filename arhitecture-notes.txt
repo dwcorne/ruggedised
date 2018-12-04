@@ -1,0 +1,38 @@
+example API call for Siemens to use:
+   http://analyti.cz/bess_availability -d JSONPACKET
+
+the json packet would look something like this:
+   {"BESS_ID":"XYZ123",    
+    "TimeFrom": <unix timestamp>
+    "TimeTo": <unix timestamp>
+    "Unit": "kW"  // alternatively kWh
+ }
+if the packet missed any of the data, we would use defaults of 'now to now+24hrs' and kWh
+obviously there's just one battery, but we can have "batteryID" field just to point out scalability...
+
+the response would be a packet that looks like this:
+ {"BESS_ID": "XYZ123",
+   "Availability": [ 
+          { "TimeFrom": <timestamp>, "TimeTo": <timestamp>, "kW": 5.5},
+          { "TimeFrom": <timestamp>, "TimeTo": <timestamp>, "kW": 5.1},
+          ...
+          { "TimeFrom": <timestamp>, "TimeTo": <timestamp>, "kW": 2.2}
+     ]
+}
+
+
+possible  API for Nairn to use, to tell us about all the battery actions as and when they get planned.
+
+  
+   http://analyti.cz/bess_action -d JSONPACKET
+
+the json packet would look something like this:
+
+   {"BESS_ID":"XYZ123",    
+     "Actions": [
+        {"TimeFrom: <timestamp>, "TimeTo": <timestamp>, "Action": "Charge", "kW": 2.5},
+        {"TimeFrom: <timestamp>, "TimeTo": <timestamp>, "Action": "Discharge", "kW": 1.5},
+        ]
+  } 
+
+Alternatively, Nairn might prefer to provide an API or a DB access point whereby we can pick that up regularly.
